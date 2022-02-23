@@ -7,17 +7,51 @@ export class News extends Component {
     this.state = {
       articles: [],
       loading: false,
+      page: 1,
     };
   }
 
   async componentDidMount() {
     let url =
-      "https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d";
+      "https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&pageSize=12";
 
     let data = await fetch(url);
     let parsedData = await data.json();
-    this.setState({ articles: parsedData.articles });
+    this.setState({
+      articles: parsedData.articles,
+      totalArticles: parsedData.totalResults,
+    });
   }
+
+  handlePrevClick = async () => {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
+      this.state.page - 1
+    }&pageSize=12`;
+
+    let data = await fetch(url);
+    let parsedData = await data.json();
+
+    this.setState({
+      page: this.state.page - 1,
+      articles: parsedData.articles,
+    });
+  };
+
+  handleNextClick = async () => {
+    if (this.state.page + 1 <= Math.ceil(this.state.totalArticles / 12)) {
+      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
+        this.state.page + 1
+      }&pageSize=12`;
+
+      let data = await fetch(url);
+      let parsedData = await data.json();
+
+      this.setState({
+        page: this.state.page + 1,
+        articles: parsedData.articles,
+      });
+    }
+  };
 
   render() {
     return (
@@ -44,6 +78,24 @@ export class News extends Component {
               </div>
             );
           })}
+        </div>
+
+        <div className="container d-flex justify-content-between">
+          <button
+            disabled={this.state.page <= 1}
+            onClick={this.handlePrevClick}
+            type="button"
+            className="btn btn-success"
+          >
+            &larr; Previous
+          </button>
+          <button
+            onClick={this.handleNextClick}
+            type="button"
+            className="btn btn-success"
+          >
+            Next &rarr;
+          </button>
         </div>
       </div>
     );
