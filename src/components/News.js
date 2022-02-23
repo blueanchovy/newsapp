@@ -1,8 +1,21 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
-
+import PropTypes from "prop-types";
 export class News extends Component {
+  static defaultProps = {
+    country: "in",
+    pageSize: 9,
+    category: "science",
+    key: "default",
+  };
+  static propTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
+    key: PropTypes.string,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -13,7 +26,7 @@ export class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -25,7 +38,11 @@ export class News extends Component {
   }
 
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&category=${
+      this.props.category
+    }&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
       this.state.page - 1
     }&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
@@ -44,7 +61,11 @@ export class News extends Component {
       this.state.page + 1 <=
       Math.ceil(this.state.totalArticles / this.props.pageSize)
     ) {
-      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
+      let url = `https://newsapi.org/v2/top-headlines?country=${
+        this.props.country
+      }&category=${
+        this.props.category
+      }&apiKey=6a1d4f2afd3b4379bd04f56e72a8bb6d&page=${
         this.state.page + 1
       }&pageSize=${this.props.pageSize}`;
       this.setState({ loading: true });
@@ -61,7 +82,9 @@ export class News extends Component {
   render() {
     return (
       <div className="container my-3">
-        <h1 className="text-center">NewsApp - Top Headlines</h1>
+        <h1 className="text-center" style={{ margin: "40px 0px" }}>
+          NewsApp - Top Headlines
+        </h1>
         {this.state.loading && <Spinner />}
 
         <div className=" row">
@@ -80,9 +103,12 @@ export class News extends Component {
                     imageUrl={
                       element.urlToImage
                         ? element.urlToImage
-                        : "https://timesofindia.indiatimes.com/thumb/msid-89762021,width-1200,height-900,resizemode-4/89762021.jpg"
+                        : "https://d2e111jq13me73.cloudfront.net/sites/default/files/styles/amp_blog_image_large/public/blog/csm-blog/breaking-news-blog-1138x658-1.jpg?itok=yqaRxbyn"
                     }
                     newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
+                    source={element.source.name}
                   />
                 </div>
               );
