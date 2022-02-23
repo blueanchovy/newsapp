@@ -64,11 +64,11 @@ export class News extends Component {
         <h1 className="text-center">NewsApp - Top Headlines</h1>
         {this.state.loading && <Spinner />}
 
-        <div className="row">
+        <div className=" row">
           {!this.state.loading &&
             this.state.articles.map((element) => {
               return (
-                <div className="col-md-4">
+                <div className=" d-flex justify-content-center col-md-4">
                   <NewsItem
                     key={element.url}
                     title={element.title ? element.title : ""}
