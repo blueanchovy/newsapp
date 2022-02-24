@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 export class Navbar extends Component {
-  static propTypes = {};
+  static defaultProps = {};
 
   render() {
     return (
@@ -81,7 +81,7 @@ export class Navbar extends Component {
               <form className="d-flex">
                 <input
                   className="form-control me-2"
-                  type="search"
+                  type="text"
                   placeholder="Search"
                   aria-label="Search"
                 />
